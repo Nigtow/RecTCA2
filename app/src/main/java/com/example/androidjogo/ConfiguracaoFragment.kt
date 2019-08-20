@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.navigation.Navigation
+import com.example.androidjogo.entidades.Categoria
 import com.example.androidjogo.entidades.CategoriasResponse
 import com.example.androidjogo.services.PerguntaService
 import kotlinx.android.synthetic.main.fragment_configuracao.*
@@ -48,7 +49,7 @@ class ConfiguracaoFragment : Fragment() {
                 }
                 override fun onResponse(call: Call<CategoriasResponse>, response: Response<CategoriasResponse>) {
                     categoriasResponse=response.body()!!
-                    val adaptercategoria = ArrayAdapter(activity, android.R.layout.simple_spinner_item, response.body()!!.categorias.map { Categoria -> Categoria.name })
+                    val adaptercategoria = ArrayAdapter(activity, android.R.layout.simple_spinner_item, response.body()!!.categorias)
                     adaptercategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     categoriasseletor!!.setAdapter(adaptercategoria)
                 }
@@ -58,9 +59,8 @@ class ConfiguracaoFragment : Fragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    val selecionada = categoriasseletor.selectedItem.toString()
-                    val indexOf = (categoriasResponse.categorias.map { Categoria -> Categoria.name }.indexOf(selecionada))+9
-                    activity!!.getPreferences(Context.MODE_PRIVATE).edit().putString("categoria", indexOf.toString()).apply()
+                    val selecionada:Categoria = categoriasseletor.selectedItem as Categoria
+                    activity!!.getPreferences(Context.MODE_PRIVATE).edit().putString("categoria", selecionada.id).apply()
                 }
             }
 
